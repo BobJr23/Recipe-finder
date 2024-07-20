@@ -15,6 +15,7 @@ def get_recipe(ingredients: list, number: int):
         f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={",".join(ingredients)}&number={number}&apiKey="
         + api_key
     ).json()
+
     return response
 
 

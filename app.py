@@ -46,11 +46,11 @@ def get_recipes():
         ingredients = request.form["ingredients"].split(",")
         number = int(request.form["number"])
         recipes = get_recipe(ingredients, number)
-        if recipes["code"] == 402:
-            return render_template(
-                "index.html",
-                text="You have exceeded the number of requests. Please try again later.",
-            )
+        # if recipes["code"] == 402:
+        #     return render_template(
+        #         "index.html",
+        #         text="You have exceeded the number of requests. Please try again later.",
+        #     )
         for x in recipes:
 
             response = get_recipe_instructions(x["id"])
