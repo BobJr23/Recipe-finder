@@ -1,58 +1,76 @@
 <html>
-  <head>
-    <title>File Upload</title>
-  </head>
-  <body>
-    <h1>File Upload</h1>
-    
-    <form method="POST" action="/add-ingredient">
+<head>
+  <title>File Upload</title>
+</head>
+<body>
+<h1>File Upload</h1>
+
+<form method="POST" action="/get-ingredients" enctype="multipart/form-data">
+  <p><input type="file" name="file"></p>
+  <p><input type="submit" value="Submit"></p>
+</form>
+
+<h2>Ingredients</h2>
+<ul>
+  {% for ingredient in ingredients %}
+  <form method="POST" action="/remove-ingredient">
+    <li>{{ ingredient }}
       <input name='ingredients' type='hidden' value={{ ingredients|join(",") }}>
-      
-      <p><input type="text" name="ingredient">
-      <input type="submit" value="Add one or more ingredients (Comma separated)"></p>
-    </form>
-    
-    {% if ingredients%}
+      <input name='ingredient' type='hidden' value={{ ingredient }}>
+      <input type="submit" value="X" style="background-color: crimson;">
+    </li>
+  </form>
+  {% endfor %}
+</ul>
 
-    <form method="POST" action="/get-recipes">
-      <input name='number' type='hidden' value="5">
-      <input name='ingredients' type='hidden' value={{ ingredients|join(",") }}>
-      <p><input type="submit" value="Get Recipes"></p>
+<form method="POST" action="/add-ingredient">
+  <input name='ingredients' type='hidden' value={{ ingredients|join(",") }}>
 
-    </form>
-    {% endif %}
-    
-    {% if recipes %}
-    <h2>Recipes</h2>
-    <ul>
-      {% for recipe in recipes %}
-      <li>
-        <p>{{ recipe[0] }}</p>
-       
-        <p>
-          <img src="{{ recipe[1] }}" alt="Recipe Image" style="width: 200px; height: 200px;">
-        </p>
-        <p>
-          <b>Missing ingredients:</b>
-          {% for ingredient in recipe[2] %}
+  <p><input type="text" name="ingredient">
+    <input type="submit" value="Add one or more ingredients (Comma separated)"></p>
+</form>
 
-          {{ ingredient }}{% if not loop.last %}, {% endif %}
+{% if ingredients%}
 
-          {% endfor %}
-        </p>
-        
-        <p>
-          <a href="{{ recipe[3] }}">Instructions</a>
-        </p>
-        
-        <p>
-          <a href="{{ recipe[4] }}">Overview</a>
-        </p>
-        
+<form method="POST" action="/get-recipes">
+  <input name='number' type='hidden' value="5">
+  <input name='ingredients' type='hidden' value={{ ingredients|join(",") }}>
+  <p><input type="submit" value="Get Recipes"></p>
 
-      </li>
+</form>
+{% endif %}
+
+{% if recipes %}
+<h2>Recipes</h2>
+<ul>
+  {% for recipe in recipes %}
+  <li>
+    <p>{{ recipe[0] }}</p>
+
+    <p>
+      <img src="{{ recipe[1] }}" alt="Recipe Image" style="width: 200px; height: 200px;">
+    </p>
+    <p>
+      <b>Missing ingredients:</b>
+      {% for ingredient in recipe[2] %}
+
+      {{ ingredient }}{% if not loop.last %}, {% endif %}
+
       {% endfor %}
-    </ul>
-    {% endif %}
-  </body>
+    </p>
+
+    <p>
+      <a href="{{ recipe[3] }}">Instructions</a>
+    </p>
+
+    <p>
+      <a href="{{ recipe[4] }}">Overview</a>
+    </p>
+
+
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+</body>
 </html>
