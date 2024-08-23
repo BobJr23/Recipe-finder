@@ -1,25 +1,25 @@
 import requests
 from io import BytesIO
 import base64
-import os
 from PIL import Image
-from dotenv import load_dotenv
-load_dotenv()
-api_key = os.getenv("API_KEY")
-clarapi_key = os.getenv("CLARAPI_KEY")
+import os
+# from dotenv import load_dotenv
+# load_dotenv()
+# api_key = os.getenv("API_KEY")
+# clarapi_key = os.getenv("CLARAPI_KEY")
 
 
-def get_recipe(ingredients: list, number: int):
-
+def get_recipe(ingredients: list, number: int, api_key):
+    ingredies = ",".join(ingredients)
     response = requests.get(
-        f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={",".join(ingredients)}&number={number}&apiKey="
+        f"https://api.spoonacular.com/recipes/findByIngredients?ingredients={ingredies}&number={number}&apiKey="
         + api_key
     ).json()
 
     return response
 
 
-def get_recipe_instructions(id: int):
+def get_recipe_instructions(id: int, api_key):
 
     response = requests.get(
         f"https://api.spoonacular.com/recipes/{id}/information?apiKey="
@@ -38,7 +38,7 @@ def get_bytes(file):
     return ret
 
 
-def get_ingredients(file):
+def get_ingredients(file, clarapi_key):
     read = get_bytes(file)
     ret = []
     response = requests.post(
@@ -49,6 +49,11 @@ def get_ingredients(file):
         },
         json={"inputs": [{"data": {"image": {"base64": read}}}]},
     ).json()
+
+    for x in response["outputs"][0]["data"]["concepts"]:
+        if x["value"] > 0.8:
+            ret.append(x["name"])
+    return ret
     
     
     for x in response["outputs"][0]["data"]["concepts"]:
